@@ -32,3 +32,7 @@ class LocationTest(TestCase):
     def test_contains_expected_field_names(self):
         serializer_data = self.serializer.data
         self.assertEqual(set(serializer_data.keys()), set(['name', 'localization', 'elevation']))
+
+    def test_name_field_content(self):
+        serializer_data = self.serializer.data
+        self.assertEqual(serializer_data['name'],self.location_attributes['name'])
