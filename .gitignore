@@ -106,11 +106,8 @@ venv.bak/
 .mypy_cache/
 
 .idea/
-Api/
 Include/
 Scripts/
 manage.py
 pip-selfcheck.json
 pyvenv.cfg
-templates/
-untitled5/

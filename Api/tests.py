@@ -11,3 +11,4 @@ class LocationTest(TestCase):
         location=Location.objects.get(id=1)
         expected_object_name=f'{location.name}'
         self.assertEqual(expected_object_name,'loc1')
+
