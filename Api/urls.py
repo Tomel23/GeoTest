@@ -4,5 +4,5 @@ from Api import views
 
 app_name='Api'
 urlpatterns=[
-    path('locations/',views.LocalizationListView.as_view(),name='location_list')
+    path('',views.LocalizationListView.as_view(),name='location_list')
 ]
