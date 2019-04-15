@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.gis',
     'rest_framework',
-
+    'rest_framework.authtoken',  # new!
+    'rest_auth',
     'Api',
 
 ]
