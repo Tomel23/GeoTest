@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.contrib.gis.db.models.functions import Distance
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.reverse import reverse
@@ -43,7 +44,7 @@ class LocationTest(APITestCase):
 
     def test_name_field_content(self):
         serializer_data = self.serializer.data
-        self.assertEqual(serializer_data['name'],self.location_attributes['name'])
+        self.assertEqual(serializer_data['name'], self.location_attributes['name'])
 
     def test_get_all_locations(self):
         user = User.objects.get(username='john')
@@ -55,4 +56,26 @@ class LocationTest(APITestCase):
         serialized = LocationSerializer(expected, many=True)
 
         self.assertEqual(response.data, serialized.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_fixed_locations(self):
+        user = User.objects.get(username='john')
+        client = APIClient()
+        client.force_authenticate(user=user)
+        response = client.get(reverse("Api:fixed_location_search", kwargs={'lat': 20, 'lon': 10, 'dist': 2000}))
+
+        y = 20.0
+        x = 10.0
+        d = 2000.0
+        user_location = Point(x, y, srid=4326)
+
+        expected = []
+
+        for l in Location.objects.filter(user=user).annotate(distance=Distance('localization', user_location)):
+            if l.distance.km <= d:
+                expected.append(LocationSerializer(l).data)
+                expected[-1]['distance'] = str(l.distance.km) + ' km'
+
+
+        self.assertEqual(response.data, expected)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
